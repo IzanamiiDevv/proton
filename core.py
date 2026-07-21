@@ -5,6 +5,12 @@ import sys
 import json
 import shutil
 import subprocess
+from urllib.parse import urlparse
+
+import json
+
+CONFIG_FILE = "config.json"
+DEFAULT_TARGET = "http://127.0.0.1:3050"
 
 try:
     import requests
@@ -14,7 +20,6 @@ except ImportError:
     sys.exit(1)
 
 PACKAGE = "com.example.wirelessdebugtoggle"
-API = "http://127.0.0.1:3050"
 
 
 # ----------------------------------------
@@ -63,10 +68,14 @@ def adb(cmd):
 
 
 def request(endpoint):
+
+    api = load_target()
+
     try:
-        r = requests.get(API + endpoint, timeout=5)
+        r = requests.get(api + endpoint, timeout=5)
         r.raise_for_status()
         return r.json()
+
     except Exception as e:
         bad(str(e))
         sys.exit(1)
@@ -245,10 +254,10 @@ def main():
 
     if cmd == "inject":
 
-        if len(sys.argv) != 3:
+        if len(sys.argv) != 2:
             usage()
 
-        inject(sys.argv[2])
+        inject()
 
     elif cmd == "wd":
 
@@ -263,10 +272,47 @@ def main():
             usage()
 
         loc(sys.argv[2])
+    
+    elif cmd == "set":
+
+        if len(sys.argv) != 3:
+            usage()
+
+        save_target(sys.argv[2])
 
     else:
         usage()
 
+
+def load_target():
+    if not os.path.exists(CONFIG_FILE):
+        return DEFAULT_TARGET
+
+    try:
+        with open(CONFIG_FILE, "r") as f:
+            data = json.load(f)
+            return data.get("target", DEFAULT_TARGET)
+    except Exception:
+        return DEFAULT_TARGET
+
+
+def save_target(target):
+
+    if not target.startswith(("http://", "https://")):
+        target = "http://" + target
+
+    target = target.rstrip("/")
+
+    parsed = urlparse(target)
+
+    # If no port was supplied, use 3050
+    if parsed.port is None:
+        target = f"{parsed.scheme}://{parsed.hostname}:3050"
+
+    with open(CONFIG_FILE, "w") as f:
+        json.dump({"target": target}, f, indent=4)
+
+    good(f"Target set to {target}")
 
 if __name__ == "__main__":
     main()
