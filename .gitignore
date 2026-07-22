@@ -1,1 +1,10 @@
 window_dump.xml
+config.json
+
+lib/_pycache__/*
+lib/endpoints/__pycache__/*
+lib/executor/__pycache__/*
+utils/__pycache__/*
+
+#TEST APP
+test/
