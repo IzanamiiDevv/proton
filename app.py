@@ -49,9 +49,9 @@ def cmd_control(result):
     print(mode, action)
 
 
-@cli.register("config", min_property=0, max_property=None).option("rhost", str, Appearance.OPTIONAL, "127.0.0.1:3090", Order.ANY).option("lhost", str, Appearance.OPTIONAL, "127.0.0.1:3050", Order.ANY).callback
+@cli.register("config", min_property=0, max_property=None).option("rhost", str, Appearance.OPTIONAL, "127.0.0.1:3090", Order.ANY).option("lhost", str, Appearance.OPTIONAL, "127.0.0.1:3050", Order.ANY).option("token", str, Appearance.OPTIONAL, "IZANAMII", Order.ANY).callback
 def cmd_config(result):
-    print(f"rhost: {result["rhost"]}\nlhost: {result["lhost"]}")
+    config(result["rhost"], result["lhost"], result["token"])
     return None
 
 
