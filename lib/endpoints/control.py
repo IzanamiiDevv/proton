@@ -8,6 +8,9 @@ import re
 from utils.status import info, good, bad, warn, BLUE, RESET
 from utils.uiautomator import dump_ui, tap_node, input_text, wait_for_focus, press_home, press_back
 
+def control(mode: str, action: str):
+    if mode == "cli": return control_mode_adb() if action == "adb" else None if action == "shell" else None
+    return None
 
 def describe_node_flags(attrib):
     flags = []
@@ -65,7 +68,7 @@ Control mode commands:
 """)
 
 
-def control_mode():
+def control_mode_adb():
     info('Entering control mode. Type "help" for commands, "exit" to quit.')
 
     nodes = []

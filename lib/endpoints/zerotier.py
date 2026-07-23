@@ -4,6 +4,7 @@
 import sys
 import os
 import time
+from string import hexdigits
 
 from utils.status import info, good, bad, warn
 from utils.uiautomator import dump_ui, tap_node, input_text, wait_for_focus, press_home, press_back, find_node, find_switch_near, print_ui, is_installed, launch_app
@@ -12,16 +13,24 @@ from utils.config import ZEROTIER_PACKAGE
 from lib.executor.adb import adb
 
 
+def zerotier(command: str, action: str, network: str):
+    if command == "join" : return zt_join_adb(network) if action == "adb" else None if action == "shell" else None
+    if command == "open" : return zt_open_adb(network) if action == "adb" else None if action == "shell" else None
+    if command == "close" : return zt_close_adb(network) if action == "adb" else None if action == "shell" else None
+    if command == "status" : return zt_status_adb(network) if action == "adb" else None if action == "shell" else None
+    if command == "list" : return zt_list_adb() if action == "adb" else None if action == "shell" else None
+    if command == "dump" : return zt_dump_adb() if action == "adb" else None if action == "shell" else None
 
 def zt_require_installed():
     if not is_installed(ZEROTIER_PACKAGE):
         bad("ZeroTier is not installed on the device.")
-        info('Run: python3 app.py zt-join -network <network_id> -apk <path-to-zerotier.apk>')
         sys.exit(1)
 
 
-def zt_join(network_id, apk_path=None):
-
+def zt_join_adb(network_id: str):
+    if not network_id or not all(c in hexdigits for c in network_id):
+        return bad("network id is not base16")
+    
     if not is_installed(ZEROTIER_PACKAGE):
         if not apk_path:
             apk_path = os.path.join("dist", "zerotier.apk")
@@ -86,7 +95,7 @@ def zt_join(network_id, apk_path=None):
     good(f"Joined ZeroTier network {network_id}")
 
 
-def zt_open(network_name):
+def zt_open_adb(network_name: str):
     zt_require_installed()
 
     launch_app(ZEROTIER_PACKAGE)
@@ -113,7 +122,7 @@ def zt_open(network_name):
     press_home()
 
 
-def zt_close(network_name):
+def zt_close_adb(network_name: str):
     zt_require_installed()
 
     launch_app(ZEROTIER_PACKAGE)
@@ -140,7 +149,7 @@ def zt_close(network_name):
     press_home()
 
 
-def zt_status(network_name):
+def zt_status_adb(network_name: str):
     zt_require_installed()
 
     launch_app(ZEROTIER_PACKAGE)
@@ -161,7 +170,7 @@ def zt_status(network_name):
     press_home()
 
 
-def zt_list():
+def zt_list_adb():
     zt_require_installed()
 
     launch_app(ZEROTIER_PACKAGE)
@@ -218,9 +227,31 @@ def zt_list():
     press_home()
 
 
-def zt_dump():
+def zt_dump_adb():
     """Debug command: launch ZeroTier, dump the current screen, print raw nodes."""
     zt_require_installed()
     launch_app(ZEROTIER_PACKAGE)
     root = dump_ui(delay=1.5)
     print_ui(root)
+
+def zt_join_shell(network_id: str):
+    if not network_id or not all(c in hexdigits for c in network_id):
+            return bad("network id is not base16")
+
+    
+    return None
+
+def zt_open_shell(network_name: str):
+    return None
+
+def zt_close_shell(network_name: str):
+    return None
+
+def zt_status_shell(network_name: str):
+    return None
+
+def zt_list_shell():
+    return None
+
+def zt_demp_shell():
+    return None
