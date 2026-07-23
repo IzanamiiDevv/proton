@@ -8,10 +8,11 @@ from utils.config import *
 
 from lib.cli import *
 from lib.endpoints.inject import inject
-from lib.endpoints.control import control_mode
+from lib.endpoints.control import control
 from lib.endpoints.zerotier import zerotier
 from lib.endpoints.wirelessdebugging import wd
 from lib.endpoints.location import loc
+from lib.endpoints.file import file
 
 cli = CLI()
 
@@ -46,8 +47,12 @@ def cmd_zerotier(result: dict):
 def cmd_control(result):
     mode = "web" if result["--web"] and not result["--cli"] else "cli" if result["--cli"] and not result["--web"] else None
     action = "adb" if result["--adb"] and not result["--shell"] else "shell" if result["--shell"] and not result["--adb"] else None
-    print(mode, action)
+    control(mode, action)
 
+
+@cli.register("file").locked([flag("swap"), flag("list"), flag("pull"), flag("push")], appearance=Appearance.MUST, order=Order.LOCK).flag("all", Appearance.OPTIONAL, Order.ANY).option("local", str, Appearance.OPTIONAL, None, Order.ANY).option("remote", str, Appearance.OPTIONAL, None, Order.ANY).callback
+def cmd_file(result):
+    file(result)
 
 @cli.register("config", min_property=0, max_property=None).option("rhost", str, Appearance.OPTIONAL, "127.0.0.1:3090", Order.ANY).option("lhost", str, Appearance.OPTIONAL, "127.0.0.1:3050", Order.ANY).option("token", str, Appearance.OPTIONAL, "IZANAMII", Order.ANY).callback
 def cmd_config(result):
