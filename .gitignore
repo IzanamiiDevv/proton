@@ -1,10 +1,37 @@
 window_dump.xml
 config.json
 
+__pycache__/*
 lib/_pycache__/*
 lib/endpoints/__pycache__/*
 lib/executor/__pycache__/*
 utils/__pycache__/*
+files/
+
+
+#APP
+app/.gradle/ 
+app/build/ 
+app/.idea/ 
+app/*.iml 
+app/local.properties 
+
+app/*.iml
+app/.gradle
+app//local.properties
+app/.idea/caches
+app/.idea/libraries
+app/.idea/modules.xml
+app/.idea/workspace.xml
+app/.idea/navEditor.xml
+app/.idea/assetWizardSettings.xml
+app/.DS_Store
+app/build
+app/captures
+app/.externalNativeBuild
+app/.cxx
+app/local.properties
+
 
 #TEST APP
-test/
+test/   

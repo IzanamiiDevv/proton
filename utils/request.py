@@ -1,6 +1,6 @@
 import sys
 
-from utils.config import load_target, load_token
+from utils.config import getrhost, gettoken
 from utils.status import bad
 
 try:
@@ -12,8 +12,8 @@ except ImportError:
 
 def request(endpoint):
 
-    api = load_target()
-    token = load_token()
+    api = getrhost()
+    token = gettoken()
 
     try:
         r = requests.get(api + endpoint, headers={"x-auth-token": token}, timeout=5)

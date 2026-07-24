@@ -50,7 +50,7 @@ def cmd_control(result):
     control(mode, action)
 
 
-@cli.register("file").locked([flag("swap"), flag("list"), flag("pull"), flag("push")], appearance=Appearance.MUST, order=Order.LOCK).flag("all", Appearance.OPTIONAL, Order.ANY).option("local", str, Appearance.OPTIONAL, None, Order.ANY).option("remote", str, Appearance.OPTIONAL, None, Order.ANY).callback
+@cli.register("file").locked([flag("swap"), flag("list"), flag("pull"), flag("push"), flag("interactive")], appearance=Appearance.MUST, order=Order.LOCK).flag("all", Appearance.OPTIONAL, Order.ANY).option("local", str, Appearance.OPTIONAL, "", Order.ANY).option("remote", str, Appearance.OPTIONAL, "", Order.ANY).callback
 def cmd_file(result):
     file(result)
 

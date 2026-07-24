@@ -9,6 +9,11 @@ DEFAULT_RHOST = "http://127.0.0.1:3050"
 DEFAULT_LHOST = "http://127.0.0.1:3050"
 DEFAULT_TOKEN = "IZANAMII"
 
+PACKAGE = "com.example.wirelessdebugtoggle"
+ZEROTIER_PACKAGE = "com.zerotier.one"
+
+UI_DUMP_REMOTE = "/sdcard/window_dump.xml"
+UI_DUMP_LOCAL = "window_dump.xml"
 
 def config(rhost: str, lhost: str, token: str):
     if rhost is not None:
@@ -61,6 +66,13 @@ def gettoken():
 
 
 # ---- setters ----
+def save_config(key: str, value):
+    data = _load_config()
+    if key in data:
+        return data[key]
+    data[key] = value
+    _save_config(data)
+    return value
 
 def save_rhost(rhost):
     rhost = _normalize_host(rhost)
